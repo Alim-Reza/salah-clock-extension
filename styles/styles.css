@@ -1,0 +1,62 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Make sure the body takes at least the full viewport height */
+  background-color: #F1F1F1; /* Example background color, match Chrome's if desired */
+}
+
+#hola-hola-text {
+  position: absolute; /* Position relative to the nearest positioned ancestor (body in this case) */
+  top: 20px; /* Adjust distance from the top as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10; /* Ensure it's above other content */
+  font-size: 24px;
+  font-weight: bold;
+  color: #333; /* Example text color */
+}
+
+#shortcuts-container {
+  margin-top: 80px; /* Add space below the "hola hola" text */
+  text-align: center;
+}
+
+#shortcuts-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Responsive grid */
+  gap: 20px;
+  margin-top: 20px;
+}
+
+#shortcuts-list li {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#shortcuts-list li img {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 5px;
+}
+
+#shortcuts-list li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}

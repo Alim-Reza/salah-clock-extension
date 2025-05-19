@@ -1,0 +1,84 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    min-height: 100vh;
+}
+
+.salah-clock-card {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 2147483647;
+}
+
+.salah-clock-content {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+}
+
+.shortcuts-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    margin-bottom: 60px;
+}
+
+.shortcuts-wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.shortcuts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+    gap: 16px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+#shortcuts-list li {
+    text-align: center;
+}
+
+#shortcuts-list a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #202124;
+    padding: 16px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+#shortcuts-list a:hover {
+    background-color: rgba(32, 33, 36, 0.1);
+}
+
+#shortcuts-list img {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 8px;
+    border-radius: 50%;
+}
+
+#shortcuts-list div {
+    font-size: 13px;
+    width: 88px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
