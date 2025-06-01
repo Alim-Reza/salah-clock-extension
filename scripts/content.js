@@ -1,5 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Use chrome.topSites.get to get the list of top sites
+
+// Set calculation method
+prayTimes.setMethod('ISNA');
+
+// Adjust parameters (optional)
+prayTimes.adjust({
+  fajr: 18,
+  dhuhr: '5 min',
+  asr: 'Hanafi',
+  isha: 18
+});
+
+// Get prayer times for today at a specific location and timezone
+const times = prayTimes.getTimes(new Date(), [23.8103, 90.4125], +6);
+
+// Display the times
+console.log('Fajr:', times.fajr);
+console.log('Dhuhr:', times.dhuhr);
+console.log('Asr:', times.asr);
+console.log('Maghrib:', times.maghrib);
+console.log('Isha:', times.isha);
+
   chrome.topSites.get((topSites) => {
     const shortcutsList = document.getElementById('shortcuts-list');
 
