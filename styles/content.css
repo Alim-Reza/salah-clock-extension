@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #fff;
+    background-color: rgba(39,62,67,1);
     font-family: 'Segoe UI', Arial, sans-serif;
     min-height: 100vh;
 }
@@ -35,17 +35,35 @@ body {
 }
 
 .shortcuts-wrapper {
-    max-width: 600px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
 .shortcuts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 12px;
     padding: 0;
     margin: 0;
     list-style: none;
+}
+
+#shortcuts-list img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 6px;
+    border-radius: 8px;
+    padding: 6px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#shortcuts-list div {
+    font-size: 12px;
+    width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
 }
 
 #shortcuts-list li {
@@ -57,7 +75,7 @@ body {
     flex-direction: column;
     align-items: center;
     text-decoration: none;
-    color: #202124;
+    color: #ffffff;
     padding: 16px 8px;
     border-radius: 4px;
     transition: background-color 0.2s;
@@ -68,10 +86,22 @@ body {
 }
 
 #shortcuts-list img {
-    width: 48px;
-    height: 48px;
+    width: 24px;
+    height: 24px;
     margin-bottom: 8px;
     border-radius: 50%;
+    padding: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+#shortcuts-list a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#shortcuts-list a:hover img {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+    filter: brightness(1.2);
 }
 
 #shortcuts-list div {
@@ -81,4 +111,36 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
+    color: #ffffff;
+    transition: color 0.2s ease;
+}
+
+#shortcuts-list a:hover div {
+    color: rgba(255, 255, 255, 0.9);
+    filter: brightness(1.2);
+}
+
+#shortcuts-list a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #202124;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+#shortcuts-list a:hover {
+    background-color: rgba(32, 33, 36, 0.05);
+}
+
+#shortcuts-list div {
+    font-size: 13px;
+    width: 88px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    color: #ffffff;
 }
