@@ -1,0 +1,122 @@
+
+    .card {
+        width: 600px;
+        height: 350px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        display: flex;
+        overflow: hidden;
+        margin: 20px auto;
+    }
+
+    .left-side {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+    }
+    .current-prayer {
+        font-size: 24px;
+        font-weight: 800;
+        /* color: #ca2e55; */
+        color: white;
+        padding-bottom: 0.5em;
+    }
+
+    .timer-container {
+        position: relative;
+        width: 160px;
+        height: 160px;
+    }
+
+    .timer-circle {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .timer-text {
+        position: relative;
+        z-index: 2;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .progress-ring {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: rotate(-90deg);
+    }
+
+    .progress-ring circle {
+        fill: none;
+    }
+
+    .progress-ring .progress-track {
+        stroke: rgba(255, 255, 255, 0.1);
+        stroke-width: 6;
+    }
+
+    .progress-ring .progress {
+        stroke: #22c55e;
+        stroke-width: 6;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 1s ease, stroke 0.3s ease;
+    }
+
+    .right-side {
+        flex: 1;
+        padding: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .table-container {
+        width: 100%;
+    }
+
+    .minimal-table {
+        width: 100%;
+        border-collapse: collapse;
+        color: white;
+    }
+
+    .minimal-table td {
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 14px;
+    }
+
+    .minimal-table td:first-child {
+        font-weight: 500;
+        opacity: 0.8;
+        width: 40%;
+    }
+
+    .minimal-table td:last-child {
+        text-align: right;
+        font-weight: 600;
+    }
+
+    .minimal-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .minimal-table tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }

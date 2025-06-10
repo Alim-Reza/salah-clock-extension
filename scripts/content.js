@@ -16,6 +16,9 @@ prayTimes.adjust({
 // Get prayer times for today at a specific location and timezone
 const times = prayTimes.getTimes(new Date(), [23.8103, 90.4125], +6);
 
+console.log(times);
+
+
 // Display the times
 console.log('Fajr:', times.fajr);
 console.log('Dhuhr:', times.dhuhr);
@@ -36,9 +39,33 @@ console.log(currentTime);
 console.log(getCurrentPrayer(prayerTimeHashMap, currentTime)); // Output: "Dhuhr"
 
 const currentPrayer = getCurrentPrayer(prayerTimeHashMap, currentTime);
-document.getElementsByClassName('salah-clock-content')[0].innerText = "Its time for: " + currentPrayer;
+document.getElementsByClassName('current-prayer')[0].innerText = currentPrayer;
 const remainingTime = getRemainingTime(prayerTimeHashMap, currentTime);
-document.getElementsByClassName('salah-remaining-time')[0].innerText = "Remaining: " +  remainingTime;
+// document.getElementsByClassName('salah-remaining-time')[0].innerText = "Remaining: " +  remainingTime;
+
+document.getElementById('fajr').innerText = times.fajr;
+document.getElementById('sunrise').innerText = times.sunrise;
+document.getElementById('dhuhr').innerText = times.dhuhr;
+document.getElementById('asr').innerText = times.asr;
+document.getElementById('maghrib').innerText = times.maghrib;
+document.getElementById('sunset').innerText = times.sunset;
+document.getElementById('isha').innerText = times.isha;
+document.getElementById('midnight').innerText = times.midnight;
+
+
+
+
+
+
+// Make these variables and functions available globally
+window.prayerTimeHashMap = prayerTimeHashMap;
+window.currentTime = currentTime;
+window.getRemainingTime = getRemainingTime;
+
+// Dispatch an event when prayer times are ready
+window.dispatchEvent(new CustomEvent('prayerTimesReady'));
+
+
   chrome.topSites.get((topSites) => {
     const shortcutsList = document.getElementById('shortcuts-list');
 
@@ -135,3 +162,5 @@ function getRemainingTime(prayerTimeHashMap, currentTime) {
   const min = minutesUntilFajr % 60;
   return `${hr}h ${min}m until Fajr`;
 }
+
+

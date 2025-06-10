@@ -1,16 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>New Tab</title>
     <link rel="stylesheet" href="styles/content.css">
+    <link rel="stylesheet" href="styles/content-card.css">
 </head>
+
 <body>
-    <div class="salah-clock-card">
-        <div class="salah-clock-content">
-            Its time for:
+    <div class="card">
+        <div class="left-side">
+            <div class="current-prayer">Its time for </div>
+            <div class="timer-container">
+                <svg class="progress-ring" width="160" height="160">
+                    <circle cx="80" cy="80" r="70" class="progress-track"></circle>
+                    <circle cx="80" cy="80" r="70" class="progress" id="progressCircle"></circle>
+                </svg>
+                <div class="timer-circle">
+                    <div class="timer-text" id="timerText">00:00</div>
+                </div>
+            </div>
         </div>
-        <div class="salah-remaining-time">00:00</div>
+
+
+        <div class="right-side">
+            <div class="table-container">
+                <table class="minimal-table">
+                    <tr>
+                        <td>fajr</td>
+                        <td id="fajr"></td>
+                    </tr>
+                    <tr>
+                        <td>sunrise</td>
+                        <td id="sunrise"></td>
+                    </tr>
+                    <tr>
+                        <td>dhuhr</td>
+                        <td id="dhuhr"></td>
+                    </tr>
+                    <tr>
+                        <td>asr</td>
+                        <td id="asr"></td>
+                    </tr>
+                    <!-- <tr><td>imsak</td><td id="imsak"></td></tr> -->
+                    <tr>
+                        <td>maghrib</td>
+                        <td id="maghrib"></td>
+                    </tr>
+                    <tr>
+                        <td>sunset</td>
+                        <td id="sunset"></td>
+                    </tr>
+                    <tr>
+                        <td>isha</td>
+                        <td id="isha"></td>
+                    </tr>
+                    <tr>
+                        <td>midnight</td>
+                        <td id="midnight"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 
     <div class="shortcuts-container">
@@ -20,5 +72,7 @@
     </div>
     <script src="scripts/content.js"></script>
     <script src="scripts/prayertime.js"></script>
+    <script src="scripts/timer.js"></script>
 </body>
+
 </html>
