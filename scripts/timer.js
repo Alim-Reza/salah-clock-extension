@@ -1,6 +1,6 @@
 class Timer {
-    constructor(duration) {
-        this.totalDuration = duration;
+    constructor(duration, totalDuration) {
+        this.totalDuration = totalDuration;
         this.remainingTime = duration;
         this.isRunning = false;
         this.interval = null;
@@ -10,7 +10,9 @@ class Timer {
         this.progressPercent = document.getElementById('progressPercent');
         
         this.circumference = 2 * Math.PI * 70;
-        this.progressCircle.style.strokeDasharray = this.circumference;
+        this.progressCircle.style.strokeDasharray = this.circumference * (1 - ( this.remainingTime / this.totalDuration));
+        console.log("progress circle at the begining : " + this.progressCircle.style.strokeDasharray);
+        console.log(this.remainingTime + " " + this.totalDuration);
         this.progressCircle.style.strokeDashoffset = 0;
         
         this.updateDisplay();
@@ -79,12 +81,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Wait for prayer times to be calculated
     const checkRemainingTime = setInterval(() => {
         const remainingTimeText = getRemainingTime(prayerTimeHashMap, currentTime);
+        const totalTimeOfPrayer = getTotalTimePerPrayer(prayerTimeHashMap, currentTime);
         if (remainingTimeText) {
             clearInterval(checkRemainingTime);
             // Convert "Xh Ym until Prayer" to minutes
             const [hours, minutes] = remainingTimeText.match(/(\d+)h\s+(\d+)m/).slice(1).map(Number);
-            const totalMinutes = (hours * 60 + minutes) * 60; // Convert to seconds
-            const timer = new Timer(totalMinutes);
+            const totalMinutesRemaining = (hours * 60 + minutes) * 60; // Convert to seconds
+            
+            const [thours, tminutes] =  totalTimeOfPrayer.match(/(\d+)h\s+(\d+)m/).slice(1).map(Number);
+            const totalMinutesOfPrayerTime = (thours * 60 + tminutes) * 60; // Convert to seconds
+            const timer = new Timer(totalMinutesRemaining, totalMinutesOfPrayerTime);
         }
     }, 100);
 });

@@ -61,6 +61,7 @@ document.getElementById('midnight').innerText = times.midnight;
 window.prayerTimeHashMap = prayerTimeHashMap;
 window.currentTime = currentTime;
 window.getRemainingTime = getRemainingTime;
+window.getCurrentPrayer = getCurrentPrayer; 
 
 // Dispatch an event when prayer times are ready
 window.dispatchEvent(new CustomEvent('prayerTimesReady'));
@@ -130,7 +131,42 @@ function getCurrentPrayer(prayerTimeHashMap, currentTime) {
   return currentPrayer;
 }
 
+function getTotalTimePerPrayer(prayerTimeHashMap, currentTime) {
+  function timeToMinutes(timeStr) {
+    if (typeof timeStr === 'number') return timeStr;
+    const [h, m] = timeStr.split(':').map(Number);
+    return h * 60 + m;
+  }
 
+  // Get current prayer
+  const currentPrayer = getCurrentPrayer(prayerTimeHashMap, currentTime);
+  
+  // Convert all prayer times to minutes and sort them
+  const sortedPrayers = Object.entries(prayerTimeHashMap)
+    .map(([name, time]) => [name, timeToMinutes(time)])
+    .sort((a, b) => a[1] - b[1]);
+
+  // Find current prayer index
+  const currentPrayerIndex = sortedPrayers.findIndex(([name]) => name === currentPrayer);
+  const nextPrayerIndex = (currentPrayerIndex + 1) % sortedPrayers.length;
+
+  let startTime = sortedPrayers[currentPrayerIndex][1];
+  let endTime = sortedPrayers[nextPrayerIndex][1];
+
+  // Handle case when next prayer is tomorrow (e.g., from Isha to Fajr)
+  if (endTime < startTime) {
+    endTime += 24 * 60; // Add 24 hours in minutes
+  }
+
+  // Calculate total duration in minutes
+  const totalMinutes = endTime - startTime;
+  
+  // Convert to hours and minutes
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  return `${hours}h ${minutes}m`;
+}
 
 function getRemainingTime(prayerTimeHashMap, currentTime) {
   function timeToMinutes(timeStr) {
