@@ -10,6 +10,12 @@
 
 <body>
     <div class="card">
+        <div class="settings-icon" id="settingsIcon" title="Settings">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+        </div>
         <div class="left-side">
             <div class="current-prayer">Its time for </div>
             <div class="timer-container">
@@ -70,6 +76,63 @@
             <ul id="shortcuts-list" class="shortcuts-grid"></ul>
         </div>
     </div>
+
+    <!-- Settings Modal -->
+    <div class="settings-modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <span class="close-button" id="closeModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <label for="locationInput">Location:</label>
+                    <input type="text" id="locationInput" placeholder="Enter city name" />
+                </div>
+                
+                <div class="setting-group">
+                    <label for="calculationMethod">Calculation Method:</label>
+                    <select id="calculationMethod">
+                        <option class="dropdown-option" value="ISNA">ISNA</option>
+                        <option class="dropdown-option" value="MWL">Muslim World League</option>
+                        <option class="dropdown-option" value="Egypt">Egyptian</option>
+                        <option class="dropdown-option" value="Makkah">Umm Al-Qura</option>
+                        <option class="dropdown-option" value="Karachi">Karachi</option>
+                        <option class="dropdown-option" value="Tehran">Tehran</option>
+                        <option class="dropdown-option" value="Jafari">Jafari</option>
+                    </select>
+                </div>
+
+                <div class="setting-group">
+                    <label for="timeFormat">Time Format:</label>
+                    <select id="timeFormat">
+                        <option class="dropdown-option" value="24h">24 Hour</option>
+                        <option class="dropdown-option" value="12h">12 Hour</option>
+                    </select>
+                </div>
+
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="enableNotifications" />
+                        Enable Prayer Notifications
+                    </label>
+                </div>
+
+                <div class="setting-group">
+                    <label for="themeSelect">Theme:</label>
+                    <select id="themeSelect">
+                        <option class="dropdown-option" value="dark">Dark</option>
+                        <option class="dropdown-option" value="light">Light</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="saveSettings">Save Settings</button>
+                <button class="btn-secondary" id="cancelSettings">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script src="scripts/content.js"></script>
     <script src="scripts/prayertime.js"></script>
     <script src="scripts/timer.js"></script>

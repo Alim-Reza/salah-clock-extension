@@ -1,4 +1,68 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Settings Modal Functionality
+  const settingsIcon = document.getElementById('settingsIcon');
+  const settingsModal = document.getElementById('settingsModal');
+  const closeModal = document.getElementById('closeModal');
+  const saveSettings = document.getElementById('saveSettings');
+  const cancelSettings = document.getElementById('cancelSettings');
+
+  // Open modal
+  settingsIcon.addEventListener('click', () => {
+    settingsModal.classList.add('show');
+    loadCurrentSettings();
+  });
+
+  // Close modal handlers
+  const closeModalHandler = () => {
+    settingsModal.classList.remove('show');
+  };
+
+  closeModal.addEventListener('click', closeModalHandler);
+  cancelSettings.addEventListener('click', closeModalHandler);
+  
+  // Close modal when clicking backdrop
+  settingsModal.addEventListener('click', (e) => {
+    if (e.target === settingsModal) {
+      closeModalHandler();
+    }
+  });
+
+  // Load current settings into form
+  function loadCurrentSettings() {
+    const settings = getStoredSettings();
+    document.getElementById('locationInput').value = settings.location || 'Dhaka';
+    document.getElementById('calculationMethod').value = settings.method || 'ISNA';
+    document.getElementById('timeFormat').value = settings.timeFormat || '24h';
+    document.getElementById('enableNotifications').checked = settings.notifications || false;
+    document.getElementById('themeSelect').value = settings.theme || 'dark';
+  }
+
+  // Save settings
+  saveSettings.addEventListener('click', () => {
+    const newSettings = {
+      location: document.getElementById('locationInput').value,
+      method: document.getElementById('calculationMethod').value,
+      timeFormat: document.getElementById('timeFormat').value,
+      notifications: document.getElementById('enableNotifications').checked,
+      theme: document.getElementById('themeSelect').value
+    };
+    
+    saveSettingsToStorage(newSettings);
+    closeModalHandler();
+    
+    // Reload prayer times with new settings
+    location.reload();
+  });
+
+  // Storage functions
+  function getStoredSettings() {
+    const stored = localStorage.getItem('salahClockSettings');
+    return stored ? JSON.parse(stored) : {};
+  }
+
+  function saveSettingsToStorage(settings) {
+    localStorage.setItem('salahClockSettings', JSON.stringify(settings));
+  }
   // Initialize PrayTimes
   const prayTimes = new PrayTimes();
   
