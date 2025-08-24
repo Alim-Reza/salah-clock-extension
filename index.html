@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islamic Prayer Reminder - New Tab</title>
+    <meta name="description" content="Beautiful Islamic prayer reminder Chrome extension with prayer times, countdown timer, recent tabs, and Islamic calendar. Stay connected with your faith." />
+    
+    <!-- Arabic Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Naskh+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Design System - Dark Theme Islamic Prayer Extension */
+        :root {
+            /* Colors */
+            --background: hsl(222, 47%, 11%);
+            --foreground: hsl(213, 31%, 91%);
+            --card: hsl(224, 27%, 15%);
+            --card-foreground: hsl(213, 31%, 91%);
+            --primary: hsl(231, 48%, 48%); /* Indigo */
+            --primary-foreground: hsl(210, 40%, 98%);
+            --secondary: hsl(258, 60%, 65%); /* Purple */
+            --secondary-foreground: hsl(210, 40%, 98%);
+            --muted: hsl(215, 28%, 17%);
+            --muted-foreground: hsl(217, 10%, 65%);
+            --accent: hsl(188, 94%, 43%); /* Cyan */
+            --accent-foreground: hsl(210, 40%, 98%);
+            --destructive: hsl(0, 73%, 56%); /* Red */
+            --border: hsl(215, 28%, 20%);
+            --islamic-gold: hsl(43, 96%, 56%);
+            --time-urgent: hsl(0, 73%, 56%);
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, hsl(231, 48%, 48%), hsl(258, 60%, 65%));
+            --gradient-card: linear-gradient(145deg, hsl(224, 27%, 15%), hsl(215, 28%, 17%));
+            --gradient-prayer: linear-gradient(90deg, hsl(231, 48%, 48%), hsl(258, 60%, 65%));
+            
+            /* Shadows */
+            --shadow-card: 0 4px 16px -4px hsl(222, 47%, 11%, 0.3);
+            --shadow-prayer: 0 8px 32px -8px hsl(231, 48%, 48%, 0.2);
+            --shadow-timer: 0 0 40px hsl(188, 94%, 43%, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--foreground);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 500;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 25% 25%, hsl(231, 48%, 48%, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, hsl(258, 60%, 65%, 0.1) 0%, transparent 50%);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Card Styles */
+        .prayer-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s ease;
+        }
+
+        .prayer-card:hover {
+            box-shadow: 0 8px 24px -8px hsl(222, 47%, 11%, 0.4);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 24px 0;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: var(--muted-foreground);
+        }
+
+        /* Card Headers */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .card-subtitle {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        /* Layout Grid */
+        .main-content {
+            padding-bottom: 32px;
+        }
+
+        .timer-section {
+            margin-bottom: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 1024px) {
+            .grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Prayer Times */
+        .prayer-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-radius: 6px;
+            border: 1px solid;
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+        }
+
+        .prayer-item.current {
+            background: var(--gradient-prayer);
+            color: var(--primary-foreground);
+            border-color: transparent;
+            box-shadow: var(--shadow-prayer);
+        }
+
+        .prayer-item.next {
+            background: hsl(258, 60%, 65%, 0.1);
+            border-color: hsl(258, 60%, 65%, 0.3);
+        }
+
+        .prayer-item.past {
+            background: hsl(215, 28%, 17%, 0.5);
+            color: var(--muted-foreground);
+            border-color: hsl(215, 28%, 20%, 0.5);
+        }
+
+        .prayer-item.default {
+            background: hsl(224, 27%, 15%, 0.5);
+            border-color: var(--border);
+        }
+
+        .prayer-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .prayer-name {
+            font-weight: 500;
+        }
+
+        .prayer-arabic {
+            font-size: 1.125rem;
+            color: var(--islamic-gold);
+            font-family: 'Noto Naskh Arabic', 'Traditional Arabic', serif;
+        }
+
+        .prayer-time {
+            font-size: 1.125rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .prayer-status {
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+
+        /* Timer */
+        .timer-container {
+            text-center;
+        }
+
+        .timer-prayer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .timer-prayer h3 {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .timer-arabic {
+            font-size: 2rem;
+            color: var(--islamic-gold);
+            font-family: 'Noto Naskh Arabic', 'Traditional Arabic', serif;
+        }
+
+        .timer-display {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            padding: 24px;
+            border-radius: 12px;
+            border: 2px solid var(--accent);
+            background: hsl(188, 94%, 43%, 0.05);
+            margin-bottom: 16px;
+        }
+
+        .timer-display.urgent {
+            border-color: var(--time-urgent);
+            background: hsl(0, 73%, 56%, 0.1);
+            box-shadow: var(--shadow-timer);
+        }
+
+        .timer-unit {
+            text-align: center;
+        }
+
+        .timer-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            color: var(--accent);
+        }
+
+        .timer-value.urgent {
+            color: var(--time-urgent);
+        }
+
+        .timer-label {
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+            margin-top: 4px;
+        }
+
+        .urgent-alert {
+            background: hsl(0, 73%, 56%, 0.1);
+            border: 1px solid hsl(0, 73%, 56%, 0.3);
+            border-radius: 6px;
+            padding: 12px;
+            color: var(--time-urgent);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Recent Tabs */
+        .tab-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid hsl(215, 28%, 20%, 0.5);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-item:hover {
+            border-color: hsl(258, 60%, 65%, 0.3);
+            background: hsl(258, 60%, 65%, 0.05);
+        }
+
+        .tab-favicon {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            background: hsl(215, 28%, 17%, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        .tab-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .tab-title {
+            font-weight: 500;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tab-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+        }
+
+        /* Islamic Calendar */
+        .current-date {
+            margin-bottom: 24px;
+            padding: 16px;
+            border-radius: 6px;
+            background: hsl(43, 96%, 56%, 0.05);
+            border: 1px solid hsl(43, 96%, 56%, 0.2);
+            text-align: center;
+        }
+
+        .current-date h3 {
+            font-size: 1.125rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .islamic-date {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .islamic-date-arabic {
+            font-size: 1.5rem;
+            color: var(--islamic-gold);
+            font-family: 'Noto Naskh Arabic', 'Traditional Arabic', serif;
+        }
+
+        .event-item {
+            padding: 16px;
+            border-radius: 6px;
+            border: 1px solid;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .event-item.major {
+            border-color: hsl(43, 96%, 56%, 0.3);
+            background: hsl(43, 96%, 56%, 0.05);
+        }
+
+        .event-item.major:hover {
+            background: hsl(43, 96%, 56%, 0.1);
+        }
+
+        .event-item.special {
+            border-color: hsl(188, 94%, 43%, 0.3);
+            background: hsl(188, 94%, 43%, 0.05);
+        }
+
+        .event-item.special:hover {
+            background: hsl(188, 94%, 43%, 0.1);
+        }
+
+        .event-header {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .event-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .event-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .event-name {
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .event-arabic {
+            font-size: 1.125rem;
+            color: var(--islamic-gold);
+            font-family: 'Noto Naskh Arabic', 'Traditional Arabic', serif;
+        }
+
+        .event-description {
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .event-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .event-date {
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+        }
+
+        .event-countdown {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .event-countdown.urgent {
+            background: hsl(0, 73%, 56%, 0.2);
+            color: var(--time-urgent);
+        }
+
+        .event-countdown.soon {
+            background: hsl(188, 94%, 43%, 0.2);
+            color: var(--accent);
+        }
+
+        .event-countdown.later {
+            background: hsl(215, 28%, 17%, 0.5);
+            color: var(--muted-foreground);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 24px 0;
+            border-top: 1px solid hsl(215, 28%, 20%, 0.3);
+            text-align: center;
+        }
+
+        .footer p {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        /* View All buttons */
+        .view-all {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid hsl(215, 28%, 20%, 0.5);
+            text-align: center;
+        }
+
+        .view-all button {
+            background: none;
+            border: none;
+            color: var(--secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .view-all button:hover {
+            color: hsl(258, 60%, 65%, 0.8);
+        }
+
+        .view-all.calendar button {
+            color: var(--islamic-gold);
+        }
+
+        .view-all.calendar button:hover {
+            color: hsl(43, 96%, 56%, 0.8);
+        }
+
+        /* Icons */
+        .icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .icon-small {
+            width: 16px;
+            height: 16px;
+        }
+
+        .icon-tiny {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Star icon for current prayer */
+        .star-icon {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <!-- <h1>Islamic Prayer Reminder</h1>
+            <p>Stay connected with your prayers and Islamic calendar</p> -->
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Prayer Timer Section -->
+            <section class="timer-section">
+                <div class="prayer-card" id="prayer-timer">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: hsl(188, 94%, 43%, 0.2);">
+                            <svg class="icon" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="card-title">Current Prayer</h2>
+                            <p class="card-subtitle">Time until next prayer</p>
+                        </div>
+                    </div>
+
+                    <div class="timer-container">
+                        <div class="timer-prayer">
+                            <h3 id="next-prayer-name">Dhuhr</h3>
+                            <span class="timer-arabic" id="next-prayer-arabic">ظهر</span>
+                        </div>
+
+                        <div class="timer-display" id="timer-display">
+                            <div class="timer-unit">
+                                <div class="timer-value" id="hours">02</div>
+                                <p class="timer-label">Hours</p>
+                            </div>
+                            <div class="timer-unit">
+                                <div class="timer-value" id="minutes">30</div>
+                                <p class="timer-label">Minutes</p>
+                            </div>
+                            <div class="timer-unit">
+                                <div class="timer-value animate-pulse" id="seconds">45</div>
+                                <p class="timer-label">Seconds</p>
+                            </div>
+                        </div>
+
+                        <div class="urgent-alert" id="urgent-alert" style="display: none;">
+                            ⏰ Next prayer approaching! Prepare for <span id="urgent-prayer-name">Dhuhr</span>
+                        </div>
+                    </div>
+
+                    <div class="view-all">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--muted-foreground); font-size: 0.875rem;">
+                            <svg class="icon-small" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                            <span>Updates every second</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Grid -->
+            <div class="grid">
+                <!-- Prayer Times -->
+                <section class="prayer-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: hsl(231, 48%, 48%, 0.2);">
+                            <svg class="icon" style="color: var(--primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="card-title">Prayer Times</h2>
+                            <p class="card-subtitle">Today's schedule</p>
+                        </div>
+                    </div>
+
+                    <div id="prayer-times">
+                        <!-- Prayer times will be populated by JavaScript -->
+                    </div>
+
+                    <div class="view-all">
+                        <p style="font-size: 0.875rem; color: var(--muted-foreground);">
+                            Location: New York, NY • <span id="current-date"></span>
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Recent Tabs -->
+                <section class="prayer-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: hsl(258, 60%, 65%, 0.2);">
+                            <svg class="icon" style="color: var(--secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                                <path d="M3 3v5h5"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="card-title">Recent Tabs</h2>
+                            <p class="card-subtitle">Your recent activity</p>
+                        </div>
+                    </div>
+
+                    <div id="recent-tabs">
+                        <!-- Recent tabs will be populated by JavaScript -->
+                    </div>
+
+                    <div class="view-all">
+                        <button>View All History</button>
+                    </div>
+                </section>
+
+                <!-- Islamic Calendar -->
+                <section class="prayer-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: hsl(43, 96%, 56%, 0.2);">
+                            <svg class="icon" style="color: var(--islamic-gold);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="card-title">Islamic Calendar</h2>
+                            <p class="card-subtitle">Upcoming events</p>
+                        </div>
+                    </div>
+
+                    <!-- Current Islamic Date -->
+                    <div class="current-date">
+                        <h3>Today</h3>
+                        <div class="islamic-date">
+                            <span class="islamic-date-arabic">شعبان</span>
+                            <span>15 Sha'ban 1446 AH</span>
+                        </div>
+                    </div>
+
+                    <div id="islamic-events">
+                        <!-- Islamic events will be populated by JavaScript -->
+                    </div>
+
+                    <div class="view-all calendar">
+                        <button>View Full Calendar</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>May Allah guide us all on the straight path • <span id="current-year"></span></p>
+        </div>
+    </footer>
+
+    <!-- Load PrayTimes library and our custom scripts -->
+    <script src="scripts/prayertime.js"></script>
+    <script src="scripts/index-content.js"></script>
+    <script src="scripts/islamic-calendar.js"></script>
+</body>
+</html>
